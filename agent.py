@@ -28,6 +28,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+import tclk
 
 TECHNOCORE_BASE = "https://technocore.chat"
 COINGECKO_GLOBAL_URL = "https://api.coingecko.com/api/v3/global"
@@ -357,6 +358,12 @@ def run_cycle(state, my_did):
     if other_room:
         other_messages = scan_room_and_reply(other_room, metrics, state, my_did)
         faucet_watch(other_messages, state)
+
+    try:
+        tclk_state = tclk.load_tclk_state()
+        tclk.scan_offers(tclk_state)
+    except Exception as e:
+        print(f"[!] TCLK scan failed: {e}", file=sys.stderr)
 
     save_state(state)
     return state
